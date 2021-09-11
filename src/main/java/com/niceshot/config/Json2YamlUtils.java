@@ -3,6 +3,7 @@ package com.niceshot.config;
 import cn.hutool.core.io.file.FileReader;
 import cn.hutool.json.JSONUtil;
 import com.esotericsoftware.yamlbeans.YamlException;
+import com.esotericsoftware.yamlbeans.YamlReader;
 import com.esotericsoftware.yamlbeans.YamlWriter;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -11,10 +12,12 @@ import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class Json2YamlUtils {
     public static void main(String[] args) throws YamlException {
-        json2Yaml();
+        //json2Yaml();
+        yaml2Json();
     }
 
     /**
@@ -30,6 +33,36 @@ public class Json2YamlUtils {
         writer.write(levelMap);
         writer.close();
         System.out.println(stringWriter);
+    }
+
+    /**
+     * yaml格式到json格式的转换工具
+     * @throws YamlException
+     */
+    public static void yaml2Json() throws YamlException {
+        FileReader fileReader = new FileReader("config.yml");
+        YamlReader yamlReader = new YamlReader(fileReader.readString());
+        Map<String,Object> mapResult = yamlReader.read(Map.class);
+        Map<String, String> finalResult = Maps.newHashMap();
+        flatMap(mapResult,Lists.newArrayList(),finalResult);
+        String jsonResult = JSONUtil.toJsonPrettyStr(finalResult);
+        System.out.println(jsonResult);
+    }
+
+    private static void flatMap(Map<String, Object> levelMap,List<String> keyBuffer,Map<String,String> finalResultStore) {
+        Set<Map.Entry<String, Object>> entries = levelMap.entrySet();
+        for(Map.Entry<String, Object> entry:entries) {
+            String key = entry.getKey();
+            Object value = entry.getValue();
+            keyBuffer.add(key);
+            if(value instanceof Map) {
+                flatMap((Map<String, Object>) value,keyBuffer,finalResultStore);
+            } else {
+                String finalKey = String.join(".", keyBuffer);
+                finalResultStore.put(finalKey,value.toString());
+                keyBuffer.remove(keyBuffer.size()-1);
+            }
+        }
     }
 
     private static Map<String, Object> buildLevelMap(Map<String, String> map) {
