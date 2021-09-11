@@ -50,8 +50,7 @@ public class Json2YamlUtils {
     }
 
     private static void flatMap(Map<String, Object> levelMap,List<String> keyBuffer,Map<String,String> finalResultStore) {
-        Set<Map.Entry<String, Object>> entries = levelMap.entrySet();
-        for(Map.Entry<String, Object> entry:entries) {
+        for(Map.Entry<String, Object> entry:levelMap.entrySet()) {
             String key = entry.getKey();
             Object value = entry.getValue();
             keyBuffer.add(key);
@@ -60,8 +59,8 @@ public class Json2YamlUtils {
             } else {
                 String finalKey = String.join(".", keyBuffer);
                 finalResultStore.put(finalKey,value.toString());
-                keyBuffer.remove(keyBuffer.size()-1);
             }
+            keyBuffer.remove(keyBuffer.size()-1);
         }
     }
 

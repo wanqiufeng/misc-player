@@ -2,5 +2,7 @@ phoenix:
   com:
     test2: 3
     test: 2
+    test3:
+      test4: ff
   name: asdfadfa
   age: 1234
