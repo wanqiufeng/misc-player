@@ -17,7 +17,8 @@ import java.util.Set;
 public class Json2YamlUtils {
     public static void main(String[] args) throws YamlException {
         //json2Yaml();
-        yaml2Json();
+        //yaml2Json();
+        System.out.println(tryCatchTest());
     }
 
     /**
@@ -83,6 +84,17 @@ public class Json2YamlUtils {
             }
         });
         return result;
+    }
+
+
+    private static Integer tryCatchTest() {
+        try {
+            throw new RuntimeException();
+        } catch (Exception e) {
+            throw e;
+        }finally {
+           // return 5;
+        }
     }
 
 
